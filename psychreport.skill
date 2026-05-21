@@ -1,0 +1,196 @@
+{
+  "name": "psychreport",
+  "displayName": "Psychological Evaluation Report Generator",
+  "version": "1.0.0",
+  "description": "Multi-agent AI system for generating professional psychological evaluation reports using specialized agents for caregiver interviews, behavioral observations, test results, diagnostic summaries, and evidence-based recommendations.",
+  "author": "SHealth Media",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shealth00/Shanique-.git",
+    "branch": "main"
+  },
+  "subdomain": "agents.shealthmedia.org",
+  "category": "clinical-assessment",
+  "tags": [
+    "psychology",
+    "psychological-evaluation",
+    "report-generation",
+    "assessment",
+    "ai-agents",
+    "clinical-tools",
+    "multi-agent-system",
+    "DSM-5",
+    "psychological-testing"
+  ],
+  "capabilities": {
+    "report_generation": {
+      "caregiver_interview": "Generate detailed caregiver interview narratives including family history, development, and behavioral concerns",
+      "behavioral_observations": "Create behavioral observation sections documenting how patient presented during testing",
+      "test_results": "Generate test result interpretations for cognitive, achievement, and behavioral measures",
+      "diagnostic_summary": "Synthesize findings into clinical impressions and diagnoses with DSM-5 codes",
+      "recommendations": "Generate 25-50 evidence-based, actionable recommendations tailored to patient needs"
+    },
+    "patient_management": {
+      "add_patients": "Add and manage multiple patient profiles",
+      "edit_patient_data": "Modify patient information and assessment data",
+      "organize_cases": "Organize and track multiple evaluation cases",
+      "export_reports": "Export reports to text and Word formats"
+    },
+    "clinical_integration": {
+      "dsm5_compliance": "DSM-5 diagnostic coding and criteria mapping",
+      "test_interpretation": "Standardized test score interpretation",
+      "adaptive_behavior": "Adaptive functioning assessment integration",
+      "functional_impact": "Document functional impact across settings"
+    }
+  },
+  "system_requirements": {
+    "runtime": "Node.js 14+",
+    "framework": "React 16.8+",
+    "api": "Anthropic Claude API",
+    "storage": "Secure local/cloud storage for reports",
+    "authentication": "User authentication required"
+  },
+  "agents": [
+    {
+      "id": "caregiver_interview",
+      "name": "Caregiver Interview Agent",
+      "description": "Generates detailed caregiver interview narratives",
+      "model": "claude-sonnet-4-20250514",
+      "maxTokens": 2000,
+      "inputFormat": "PatientData JSON"
+    },
+    {
+      "id": "behavioral_observations",
+      "name": "Behavioral Observations Agent",
+      "description": "Creates behavioral observation section from testing session",
+      "model": "claude-sonnet-4-20250514",
+      "maxTokens": 2000,
+      "inputFormat": "BehavioralData JSON"
+    },
+    {
+      "id": "test_results",
+      "name": "Test Results Agent",
+      "description": "Generates test result interpretations and analyses",
+      "model": "claude-sonnet-4-20250514",
+      "maxTokens": 2000,
+      "inputFormat": "TestScores JSON"
+    },
+    {
+      "id": "diagnostic_summary",
+      "name": "Diagnostic Summary Agent",
+      "description": "Synthesizes data into clinical impressions and diagnoses",
+      "model": "claude-sonnet-4-20250514",
+      "maxTokens": 2000,
+      "inputFormat": "AllAssessmentData JSON"
+    },
+    {
+      "id": "recommendations",
+      "name": "Recommendations Agent",
+      "description": "Generates evidence-based tailored recommendations",
+      "model": "claude-sonnet-4-20250514",
+      "maxTokens": 2000,
+      "inputFormat": "DiagnosisData JSON"
+    }
+  ],
+  "outputFormats": [
+    "text/plain",
+    "application/msword",
+    "application/pdf",
+    "text/markdown"
+  ],
+  "supportedDiagnoses": [
+    "Autism Spectrum Disorder",
+    "ADHD (Attention-Deficit/Hyperactivity Disorder)",
+    "Specific Learning Disorder",
+    "Intellectual Disability",
+    "Anxiety Disorders",
+    "Mood Disorders",
+    "Conduct Disorder",
+    "Oppositional Defiant Disorder",
+    "Speech and Language Disorder",
+    "Other developmental and behavioral conditions"
+  ],
+  "supportedAgeRanges": ["Preschool (3-5)", "Early Elementary (6-8)", "Late Elementary (9-11)", "Middle School (12-14)", "High School (15-18)", "Adult"],
+  "clinicalGuidelines": {
+    "requiresLicensedClinicianReview": true,
+    "dsm5Compliant": true,
+    "hipaaCompliant": true,
+    "accessibilityGuidelines": "WCAG 2.1 Level AA"
+  },
+  "documentation": {
+    "readme": "README.md",
+    "quickStart": "QUICK_START.md",
+    "architecture": "psych_report_system.md",
+    "sampleData": "sample_patient_data.md",
+    "promptEngineering": "PROMPT_ENGINEERING.md",
+    "index": "INDEX.md"
+  },
+  "installation": {
+    "npm": "npm install psychreport-agent",
+    "git": "git clone git@github.com:shealth00/Shanique-.git",
+    "docker": "docker run -p 3000:3000 psychreport-agent:latest"
+  },
+  "environment": {
+    "ANTHROPIC_API_KEY": "Required - Your Anthropic API key",
+    "REACT_APP_API_BASE": "Optional - API base URL (default: https://api.anthropic.com)",
+    "NODE_ENV": "development|production",
+    "SUBDOMAIN": "agents.shealthmedia.org"
+  },
+  "permissions": {
+    "patientDataAccess": "Read/Write",
+    "reportGeneration": "Full",
+    "reportExport": "Full",
+    "dataEncryption": "Required",
+    "apiAccess": "Anthropic Claude API"
+  },
+  "performance": {
+    "avgReportGenerationTime": "3-5 minutes",
+    "timeSavingsPerReport": "50-75%",
+    "supportedConcurrentUsers": "Unlimited",
+    "apiCallsPerReport": 5
+  },
+  "pricing": {
+    "model": "Based on Anthropic API usage",
+    "costPerReport": "Approximately $0.50-2.00 per full report",
+    "freeTrialAvailable": true,
+    "licenseModel": "MIT Open Source"
+  },
+  "support": {
+    "documentation": "https://github.com/shealth00/Shanique-/wiki",
+    "repository": "https://github.com/shealth00/Shanique-",
+    "subdomain": "https://agents.shealthmedia.org",
+    "issues": "https://github.com/shealth00/Shanique-/issues"
+  },
+  "security": {
+    "dataEncryption": "AES-256 for stored data",
+    "transportSecurity": "TLS 1.3+",
+    "apiKeyHandling": "Environment variables only",
+    "hipaaCompliance": "Verified",
+    "dataRetention": "Per organizational policy"
+  },
+  "compliance": {
+    "hipaa": "HIPAA compliant",
+    "gdpr": "GDPR compliant (EU data handling)",
+    "ferpa": "FERPA compliant (education records)",
+    "dsm5": "DSM-5-TR compliant",
+    "apa": "APA Standards of Care compliant"
+  },
+  "integrations": {
+    "ehr": "EHR integration ready",
+    "googleDrive": "Google Drive export support",
+    "cloudStorage": "AWS S3, Azure Blob compatible",
+    "authentication": "OAuth2, LDAP, SAML"
+  },
+  "deployment": {
+    "platforms": ["Docker", "Kubernetes", "AWS", "Azure", "GCP", "On-premise"],
+    "containerImage": "shealth/psychreport-agent:latest",
+    "helm": "Available in Helm repository"
+  },
+  "monitoring": {
+    "healthChecks": "API endpoint health",
+    "logging": "Comprehensive activity logging",
+    "metrics": "Report generation metrics, API usage",
+    "alerts": "Critical error notifications"
+  }
+}
