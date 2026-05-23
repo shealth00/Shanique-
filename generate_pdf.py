@@ -1,0 +1,511 @@
+#!/usr/bin/env python3
+"""Generate a formatted PDF of the Marcus Johnson Psychological Evaluation."""
+
+import subprocess, sys, textwrap
+
+html_content = """<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000;
+    margin: 0;
+    padding: 0;
+  }
+  @page {
+    margin: 1in;
+    @top-center {
+      content: "CONFIDENTIAL — Irby Psychological Services";
+      font-size: 8pt;
+      font-style: italic;
+      color: #555;
+    }
+    @bottom-center {
+      content: counter(page);
+      font-size: 8pt;
+      color: #555;
+    }
+  }
+  .header-block {
+    text-align: center;
+    margin-bottom: 12pt;
+  }
+  .header-block .clinic-name {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 4pt;
+  }
+  .header-block .clinic-sub {
+    font-size: 9.5pt;
+    color: #333;
+    margin: 2pt 0;
+  }
+  hr.thick { border: none; border-top: 2px solid #000; margin: 10pt 0; }
+  hr.thin  { border: none; border-top: 1px solid #aaa; margin: 6pt 0; }
+  .confidential-banner {
+    text-align: center;
+    margin: 8pt 0;
+  }
+  .confidential-banner .conf-label {
+    font-weight: bold;
+    font-size: 11pt;
+    letter-spacing: 1px;
+  }
+  .confidential-banner .report-title {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-top: 4pt;
+  }
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12pt 0 6pt 0;
+    font-size: 10.5pt;
+  }
+  .info-table td { padding: 2pt 6pt; vertical-align: top; }
+  .info-table td:first-child { font-weight: bold; width: 38%; }
+  h1 {
+    font-size: 12pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1.5px solid #000;
+    padding-bottom: 3pt;
+    margin-top: 18pt;
+    margin-bottom: 6pt;
+    page-break-after: avoid;
+  }
+  h2 {
+    font-size: 11pt;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 14pt;
+    margin-bottom: 4pt;
+    page-break-after: avoid;
+  }
+  p { margin: 0 0 6pt 0; text-align: justify; }
+  ul { margin: 4pt 0 6pt 0; padding-left: 22pt; }
+  ul li { margin-bottom: 3pt; }
+  ol { margin: 4pt 0 6pt 0; padding-left: 22pt; }
+  ol li { margin-bottom: 5pt; }
+  ol.alpha { list-style-type: lower-alpha; }
+  ol.alpha li { margin-bottom: 3pt; }
+  em { font-style: italic; }
+  strong { font-weight: bold; }
+  table.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 8pt 0;
+    page-break-inside: avoid;
+  }
+  table.score-table th {
+    background-color: #e8e8e8;
+    font-weight: bold;
+    padding: 4pt 6pt;
+    text-align: center;
+    border: 1px solid #999;
+  }
+  table.score-table td {
+    padding: 3pt 6pt;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+  }
+  table.score-table td:first-child { text-align: left; }
+  table.score-table td:not(:first-child) { text-align: center; }
+  table.score-table tr:nth-child(even) td { background-color: #f8f8f8; }
+  table.score-table tr.domain td { font-weight: bold; background-color: #e8e8e8; }
+  table.score-table tr.subtest td { padding-left: 18pt; }
+  .note { font-size: 9pt; font-style: italic; margin-top: 4pt; color: #444; }
+  .sig-block { margin-top: 24pt; width: 100%; border-collapse: collapse; }
+  .sig-block td { padding: 4pt 6pt; vertical-align: top; font-size: 10pt; }
+  .diagnoses-block { margin: 6pt 0; }
+  .diagnoses-block p { margin-bottom: 4pt; }
+  .page-break { page-break-before: always; }
+  .cs  { color: #c00; }
+  .ar  { color: #b85e00; }
+  .avg { color: #000; }
+</style>
+</head>
+<body>
+
+<!-- CLINIC HEADER -->
+<div class="header-block">
+  <div class="clinic-name">Irby Psychological Services</div>
+  <div class="clinic-sub">Psychology &middot; Counseling &middot; Applied Behavior Analysis</div>
+  <div class="clinic-sub">Speech Therapy &middot; Occupational Therapy</div>
+  <div class="clinic-sub" style="margin-top:6pt;">662-228-0130 (Phone) &middot; 678-868-2843 (Fax)</div>
+  <div class="clinic-sub">frontdesk@irbypsychservices.net &middot; www.irbypsychservices.net</div>
+</div>
+
+<hr class="thick">
+
+<div class="confidential-banner">
+  <div class="conf-label">CONFIDENTIAL</div>
+  <div class="report-title">PSYCHOLOGICAL EVALUATION</div>
+</div>
+
+<hr class="thin">
+
+<table class="info-table">
+  <tr><td>Client Name:</td><td>Marcus James Johnson</td></tr>
+  <tr><td>Birth Date:</td><td>March 15, 2015</td></tr>
+  <tr><td>Age:</td><td>9 years, 2 months</td></tr>
+  <tr><td>Sex:</td><td>Male</td></tr>
+  <tr><td>Intake Date:</td><td>XX/XX/2024</td></tr>
+  <tr><td>Evaluation Date:</td><td>XX/XX/2024</td></tr>
+  <tr><td>Date of Report:</td><td>XX/XX/2024</td></tr>
+  <tr><td>Parent/Guardian:</td><td>Tamara Johnson &amp; Robert Johnson Sr.<br>Memphis, Tennessee</td></tr>
+</table>
+
+<hr class="thick">
+
+<!-- REASON FOR EVALUATION -->
+<h1>Reason for Evaluation</h1>
+<p>Marcus James Johnson was referred for a comprehensive psychological evaluation at Irby Psychological Services (IPS) by his pediatrician, Dr. Keisha Williams, M.D., of Memphis Children's Medical Center. Concerns noted by Marcus's caregivers, Tamara Johnson and Robert Johnson Sr., at the time of intake included inattention, hyperactivity, impulse control difficulties, and related behavioral challenges that are impacting his functioning at home and school. His caregivers requested a comprehensive evaluation to determine the presence of Attention-Deficit/Hyperactivity Disorder (ADHD) or other appropriate diagnoses and to provide recommendations for intervention services and academic accommodations based on current levels of functioning.</p>
+
+<!-- PSYCHODIAGNOSTIC PROCEDURES -->
+<h1>Psychodiagnostic Procedures</h1>
+<ul>
+  <li><em>Behavior Assessment System for Children, Third Edition &ndash; Parent Rating Scales-Child (BASC-3 PRS-C)</em></li>
+  <li><em>Behavior Assessment System for Children, Third Edition &ndash; Teacher Rating Scales-Child (BASC-3 TRS-C)</em></li>
+  <li><em>Behavioral Observations</em></li>
+  <li><em>Conners, Fourth Edition &ndash; Parent Short Form (Conners-4)</em></li>
+  <li><em>Conners, Fourth Edition &ndash; Self-Report Short Form (Conners-4)</em></li>
+  <li><em>Conners, Fourth Edition &ndash; Teacher Short Form (Conners-4)</em></li>
+  <li><em>Parent Semi-Structured Clinical Interview</em></li>
+  <li><em>Reynolds Intellectual Assessment Scales, Second Edition (RIAS-2)</em></li>
+  <li><em>Vineland Adaptive Behavior Scales, Third Edition &ndash; Domain-Level Parent/Caregiver Form</em></li>
+</ul>
+
+<!-- CAREGIVER INTERVIEW -->
+<h1>Caregiver Interview</h1>
+<p>Marcus's caregivers provided the following information during a clinical interview concerning Marcus's past and current functioning. Marcus is a 9-year-old boy living with both biological parents, his older sister Jasmine (age 13), and his younger brother Aiden (age 6) in a single-family home in Memphis, Tennessee. The family reports a stable home environment with all family members actively involved in Marcus's care and education. Per parental report, family history is significant for ADHD on both the paternal and maternal sides; specifically, a paternal uncle was diagnosed with ADHD in childhood and is currently managed with medication, and a maternal aunt was diagnosed with ADHD in adulthood. Mr. Johnson Sr. also reported some attention difficulties as a child, though he was never formally diagnosed. Paternal grandmother Dorothy Johnson (age 72) provides afterschool childcare two to three days per week and resides in the same neighborhood. Caregivers identified their immediate family, Marcus's maternal grandmother, and his maternal aunt as important sources of social support.</p>
+<p>Ms. Johnson stated that she was 28 years old at the time of Marcus's conception and that the pregnancy was planned, desired, and uncomplicated, progressing to full term at 40 weeks gestation. She denied any illnesses, infections, complications, or use of medications beyond prenatal vitamins during pregnancy. She also denied alcohol, tobacco, or recreational drug use. Marcus was born via vaginal delivery at Baptist Memorial Hospital East on March 15, 2015. Labor lasted approximately 8 hours and was uncomplicated. His birth weight was 7 lbs, 4 oz and length was 20 inches. Apgar scores were reported as 9 and 10 at 1 and 5 minutes, respectively. He was discharged after 2 days without complications.</p>
+<p>Regarding medical history, Marcus experienced multiple ear infections from ages 2 to 4 years (approximately 4&ndash;5 episodes), all treated with antibiotics and resolved without complications. He was diagnosed with mild intermittent asthma at age 4, currently managed with an albuterol inhaler as needed, with no recent exacerbations requiring controller medications. Marcus has a mild peanut allergy characterized by oral itching and swelling; the family avoids peanuts and carries an EpiPen as a precaution. Ms. Johnson noted that Marcus sometimes has itchy, watery eyes during spring, which may suggest seasonal allergies. No hospitalizations or serious injuries were reported, aside from a minor arm sprain at age 5 that resolved fully within 2 weeks. Current medications include the albuterol inhaler (PRN) and an over-the-counter daily children's multivitamin. Vision and hearing were screened by the school nurse in September 2023 and found to be within normal limits.</p>
+<p>Regarding sleep, Marcus typically goes to bed around 8:30&ndash;9:00 PM and wakes at approximately 6:30&ndash;7:00 AM on school days, obtaining approximately 8&ndash;8.5 hours of sleep nightly&mdash;somewhat below the recommended 9&ndash;12 hours for his age. Ms. Johnson reported that Marcus often takes 30&ndash;45 minutes to fall asleep and occasionally experiences nightmares (1&ndash;2 per month), though sleepwalking and night terrors were denied. Regarding appetite, Ms. Johnson described Marcus as having a generally good appetite, though she noted he prefers softer-textured foods. No restrictive eating patterns or weight concerns were reported.</p>
+<p>Per Ms. Johnson's report, Marcus achieved his motor and language developmental milestones within normal limits. He sat independently at 6 months, walked at 12 months, and was described as "always on the move." His first words appeared around 10&ndash;12 months, and he was using 2&ndash;3-word phrases by approximately 18&ndash;20 months. By age 3, Marcus was using full sentences and was notably talkative. At the time of this assessment, Ms. Johnson reports that Marcus's speech is clear and intelligible with age-appropriate vocabulary and articulation. She described Marcus as "chatty" and noted that he often initiates conversations. However, she reported that Marcus sometimes has difficulty with conversational turn-taking and frequently interrupts others when excited or engaged in topics of interest. He demonstrates adequate comprehension of simple and two-step directions when attending, but requires repetition for multistep (3+) directions.</p>
+<p>Concerning educational history, Marcus attended Sunshine Daycare Center from 6 weeks through age 3 years, where staff noted he was "very active" and had difficulty sitting still during group time, though no formal concerns were raised at that time. From ages 3 to 4, he attended Creative Kids Academy (a private preschool) three days per week; his preschool teacher noted difficulty with transitions and group activities. Marcus has attended Shelby County Schools&mdash;Lincoln Elementary School since kindergarten and is currently enrolled in the 4th grade in a general education classroom. No special education services are currently in place, though the school has suggested evaluation for a 504 Accommodations Plan. Ms. Johnson reported that Marcus reads below grade level and struggles with mathematics; he received math tutoring in 3rd grade. Writing is an area of difficulty, with reportedly messy and rushed handwriting. He performs better in subjects aligned with his interests, particularly science and topics related to animals. His overall GPA is in the C+/B- range. Marcus has received detention on 2&ndash;3 occasions this school year for off-task behavior and incomplete homework, and has been sent to the office approximately 4&ndash;5 times for behavioral concerns, though no suspensions or serious infractions were reported. His teacher, Mr. David Chen, has expressed concerns regarding Marcus's ability to focus and has recommended a comprehensive evaluation.</p>
+<p>Regarding behavioral and social-emotional functioning, Ms. Johnson described Marcus as "a good kid overall" but expressed significant concern regarding inattention, hyperactivity, and impulse control. She reported that Marcus jumps from activity to activity quickly, rushes through assignments without checking his work, acts before thinking, and frequently loses or misplaces items such as homework and permission slips. He is described as "constantly moving," with excessive fidgeting, difficulty remaining seated at mealtimes, and a notably high energy level throughout the day. Ms. Johnson reported that Marcus can become frustrated easily, with emotional outbursts occurring approximately 2&ndash;3 times per week. These outbursts may involve yelling, hitting, or stomping and can take 15&ndash;30 minutes to resolve. Notably, Ms. Johnson reported that Marcus is able to sustain focused attention when engaged in highly preferred activities, such as video games (Minecraft, Fortnite), Lego building, and YouTube content, though this level of focus does not generalize to non-preferred academic tasks. Socially, Marcus is described as outgoing and generally enjoys peer interaction. He plays regularly with 2&ndash;3 boys at recess and participates in soccer in the fall. However, he sometimes has difficulty reading social cues, can be bossy or overly silly, and has been involved in 3&ndash;4 minor peer conflicts over the past school year. His personal hygiene and self-care routines require consistent adult reminders.</p>
+
+<!-- BEHAVIORAL OBSERVATIONS -->
+<h1>Behavioral Observations</h1>
+<p>Marcus James Johnson presented for testing appropriately dressed and groomed, accompanied by both parents, Ms. Tamara Johnson and Mr. Robert Johnson Sr. He appeared comfortable upon arrival and readily separated from his parents to enter the testing room, though he briefly looked back to confirm their presence before proceeding. Marcus's hearing and vision appeared adequate for testing, as he appropriately responded to visual and auditory stimuli throughout the session.</p>
+<p>Throughout the evaluation, Marcus demonstrated significant ADHD-consistent behaviors, including excessive motor activity, difficulty remaining seated, and persistent fidgeting with testing materials (e.g., repeatedly clicking his pen, tapping his fingers on the table, and swinging his legs). He frequently shifted positions in his chair, turned around in his seat, and on multiple occasions stood up during task administration. Marcus required frequent, repeated redirection to remain focused on tasks and routinely blurted out answers before questions were fully presented, demonstrating impulsive responding. He also made numerous off-task comments and attempted to redirect conversation toward preferred topics, including video games and soccer.</p>
+<p>Regarding verbal communication, Marcus communicated using age-appropriate vocabulary and articulation and was notably talkative throughout the session. He readily initiated conversation and demonstrated enthusiasm when discussing areas of personal interest. However, Marcus frequently interrupted the examiner and had difficulty allowing a natural conversational flow, often finishing the examiner's sentences or changing the subject mid-exchange. Eye contact was generally appropriate and sustained throughout the evaluation.</p>
+<p>During tasks that Marcus found engaging, he demonstrated the capacity for brief periods of sustained effort. In contrast, on tasks he perceived as difficult or uninteresting, Marcus frequently looked away, made off-task verbalizations, and required multiple prompts to continue. Testing modifications used to maintain Marcus's cooperation included: frequent verbal praise and encouragement, short breaks between subtests, and repetition of instructions. Despite these behavioral challenges, Marcus demonstrated genuine effort throughout the evaluation and expressed frustration when he was unable to answer questions correctly, stating at one point, "I hate when I don't know stuff." His behavioral presentation was consistent with caregiver and teacher reports of his functioning across home and school settings. Thus, results from today's evaluation are considered a reasonably valid estimate of Marcus's current cognitive and behavioral functioning.</p>
+
+<!-- TEST RESULTS -->
+<h1>Test Results</h1>
+
+<table class="score-table">
+  <tr>
+    <th>Standard Score</th><th>Scaled Score</th><th>T-Score</th><th>Narrative Descriptor</th>
+  </tr>
+  <tr><td>&ge;140</td><td>18+</td><td>77+</td><td>Extremely High</td></tr>
+  <tr><td>130&ndash;139</td><td>16&ndash;17</td><td>70&ndash;76</td><td>Very High</td></tr>
+  <tr><td>120&ndash;129</td><td>14&ndash;15</td><td>64&ndash;69</td><td>High</td></tr>
+  <tr><td>110&ndash;119</td><td>12&ndash;13</td><td>57&ndash;63</td><td>High Average</td></tr>
+  <tr><td>90&ndash;109</td><td>9&ndash;11</td><td>44&ndash;56</td><td>Average</td></tr>
+  <tr><td>80&ndash;89</td><td>7&ndash;8</td><td>37&ndash;43</td><td>Low Average</td></tr>
+  <tr><td>70&ndash;79</td><td>5&ndash;6</td><td>31&ndash;36</td><td>Low</td></tr>
+  <tr><td>60&ndash;69</td><td>3&ndash;4</td><td>24&ndash;30</td><td>Very Low</td></tr>
+  <tr><td>&le;59</td><td>1&ndash;2</td><td>&le;23</td><td>Extremely Low</td></tr>
+</table>
+<p class="note"><em>Narrative Score Descriptors (Kranzler &amp; Floyd, 2020). Adapted from: Kranzler, J. H., &amp; Floyd, R. G. (2020).</em> Assessing intelligence in children and adolescents: A practical guide for evidence-based assessment. <em>Rowman &amp; Littlefield.</em></p>
+
+<h2>Reynolds Intellectual Assessment Scales, Second Edition (RIAS-2)</h2>
+<p>The <em>RIAS-2</em> is a standardized assessment of intelligence and cognitive abilities for individuals aged 3 through 94 years. The Composite Intelligence Index consists of 4 subtests and is generally considered the best overall predictor of cognitive functioning. The average score is 100 with a standard deviation of 15; the mean T-score is 50 with a standard deviation of 10. The <em>RIAS-2</em> measures intelligence using two primary indices: Verbal Intelligence Index and Nonverbal Intelligence Index. Results are below:</p>
+
+<table class="score-table">
+  <tr><th>Index / Subtest</th><th>SS (90% CI)</th><th>T-Score</th><th>Percentile</th></tr>
+  <tr class="domain"><td>Verbal Intelligence Index</td><td>97 (91&ndash;103)</td><td>49</td><td>42</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Guess What</td><td>&mdash;</td><td>50</td><td>50</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Verbal Reasoning</td><td>&mdash;</td><td>48</td><td>42</td></tr>
+  <tr class="domain"><td>Nonverbal Intelligence Index</td><td>95 (89&ndash;101)</td><td>47</td><td>37</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Odd-Item Out</td><td>&mdash;</td><td>48</td><td>42</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;What's Missing</td><td>&mdash;</td><td>46</td><td>34</td></tr>
+  <tr class="domain"><td>Composite Intelligence Index</td><td>96 (91&ndash;101)</td><td>&mdash;</td><td>39</td></tr>
+</table>
+
+<p>Marcus's performance on the <em>RIAS-2</em> indicated that his current level of overall intellectual functioning is in the <strong>Average</strong> range when compared to other children his age (CII = 96; PR = 39). His Verbal and Nonverbal Intelligence Index scores were comparably developed, with no significant discrepancy between domains. Throughout the <em>RIAS-2</em>, Marcus required frequent redirection and needed repetition of some instructions; however, when focused, he approached tasks with genuine effort. These results indicate that Marcus's cognitive abilities are consistent with his age group, and his observed academic difficulties are not attributable to global intellectual impairment.</p>
+
+<h2>Vineland Adaptive Behavior Scales, Third Edition &ndash; Domain-Level Parent/Caregiver Form</h2>
+<p>The <em>Vineland-3</em> provides a comprehensive, norm-referenced assessment of adaptive skills (i.e., what a person does versus what they can do). The Domain-Level form contains four adaptive skill areas and an Adaptive Behavior Composite (ABC; mean = 100, SD = 15). Results are presented below:</p>
+
+<table class="score-table">
+  <tr><th>Domain / Subdomain</th><th>SS (90% CI)</th><th>v-scale</th><th>Percentile</th></tr>
+  <tr class="domain"><td>Communication</td><td>86 (80&ndash;92)</td><td>&mdash;</td><td>18</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Receptive</td><td>&mdash;</td><td>11</td><td>63</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Expressive</td><td>&mdash;</td><td>9</td><td>37</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Written</td><td>&mdash;</td><td>8</td><td>25</td></tr>
+  <tr class="domain"><td>Daily Living Skills</td><td>79 (73&ndash;85)</td><td>&mdash;</td><td>8</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Personal</td><td>&mdash;</td><td>9</td><td>37</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Domestic</td><td>&mdash;</td><td>8</td><td>25</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Community</td><td>&mdash;</td><td>7</td><td>16</td></tr>
+  <tr class="domain"><td>Socialization</td><td>88 (82&ndash;94)</td><td>&mdash;</td><td>21</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Interpersonal Relationships</td><td>&mdash;</td><td>9</td><td>37</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Leisure</td><td>&mdash;</td><td>10</td><td>50</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Coping Skills</td><td>&mdash;</td><td>8</td><td>25</td></tr>
+  <tr class="domain"><td>Motor Skills</td><td>100 (94&ndash;106)</td><td>&mdash;</td><td>50</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Gross</td><td>&mdash;</td><td>11</td><td>63</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Fine</td><td>&mdash;</td><td>10</td><td>50</td></tr>
+  <tr class="domain"><td>Adaptive Behavior Composite</td><td>83 (78&ndash;88)</td><td>&mdash;</td><td>13</td></tr>
+  <tr class="domain"><td>Maladaptive Behavior</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Internalizing</td><td>&mdash;</td><td>16 (Elevated)</td><td>&mdash;</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Externalizing</td><td>&mdash;</td><td>20 (Elevated)</td><td>&mdash;</td></tr>
+</table>
+
+<p>Per Ms. Johnson's responses on the <em>Vineland-3</em>, Marcus's overall Adaptive Behavior Composite falls within the <strong>Low Average</strong> range (ABC = 83; PR = 13). Motor Skills were a notable strength (<strong>Average</strong> range), reflecting his physical development and athleticism. Communication (SS = 86) and Socialization (SS = 88) were in the Low Average range. Daily Living Skills (SS = 79) fell in the <strong>Low</strong> range, consistent with caregiver reports that Marcus requires persistent adult prompting for hygiene and self-care. Maladaptive behavior scores were <strong>Elevated</strong> in both Internalizing and Externalizing domains, reflecting his frustration-based outbursts and impulsive behaviors. Overall, these findings are consistent with the functional impact of ADHD on daily living.</p>
+
+<h2>Behavior Assessment System for Children, Third Edition &ndash; Parent Rating Scales-Child (BASC-3 PRS-C)</h2>
+<p>The <em>BASC-3 PRS-C</em> is a parent-completed broadband measure of adaptive and problem behaviors in children ages 2&ndash;25. Frequency ratings range from 'never' to 'almost always.' Ms. Tamara Johnson completed the <em>BASC-3 PRS-C</em>. Validity indices indicate her ratings are a reasonable representation of Marcus's typical behaviors. Key results:</p>
+
+<table class="score-table">
+  <tr><th>Scale</th><th>T-Score</th><th>Classification</th></tr>
+  <tr class="domain"><td>Behavioral Symptoms Index</td><td>71</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Hyperactivity</td><td>76</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Attention Problems</td><td>77</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Learning Problems</td><td>73</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Aggression</td><td>58</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Conduct Problems</td><td>55</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Anxiety</td><td>54</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Depression</td><td>56</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Atypicality</td><td>54</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Withdrawal</td><td>50</td><td class="avg">Average</td></tr>
+  <tr class="domain"><td>Adaptive Skills Composite</td><td>44</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Adaptability</td><td>42</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Activities of Daily Living</td><td>43</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Social Skills</td><td>46</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Functional Communication</td><td>45</td><td class="avg">Average</td></tr>
+</table>
+
+<p>Ms. Johnson's ratings reflect <strong>Clinically Significant</strong> elevations in Attention Problems, Hyperactivity, Learning Problems, and overall BSI, with <strong>At-Risk</strong> concerns in Adaptive Skills, Adaptability, and Activities of Daily Living. These findings strongly support a diagnosis of ADHD and indicate significant functional impairment in academic and daily living domains.</p>
+
+<h2>Behavior Assessment System for Children, Third Edition &ndash; Teacher Rating Scales-Child (BASC-3 TRS-C)</h2>
+<p>The <em>BASC-3 TRS-C</em> is a teacher-completed broadband measure using the same structure and scoring as the PRS. Mr. David Chen (Marcus's 4th-grade teacher at Lincoln Elementary) completed the <em>BASC-3 TRS-C</em>. Validity indices indicate his ratings are a reasonable representation of Marcus's school behavior.</p>
+
+<table class="score-table">
+  <tr><th>Scale</th><th>T-Score</th><th>Classification</th></tr>
+  <tr class="domain"><td>Behavioral Symptoms Index</td><td>74</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Hyperactivity</td><td>79</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Attention Problems</td><td>80</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Learning Problems</td><td>77</td><td class="cs">Clinically Significant</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Aggression</td><td>54</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Conduct Problems</td><td>52</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Anxiety</td><td>48</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Depression</td><td>51</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Atypicality</td><td>52</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Withdrawal</td><td>49</td><td class="avg">Average</td></tr>
+  <tr class="domain"><td>Adaptive Skills Composite</td><td>40</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Adaptability</td><td>38</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Study Skills</td><td>37</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Leadership</td><td>41</td><td class="ar">At-Risk</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Social Skills</td><td>44</td><td class="avg">Average</td></tr>
+  <tr class="subtest"><td>&nbsp;&nbsp;&nbsp;Functional Communication</td><td>43</td><td class="avg">Average</td></tr>
+</table>
+
+<p>Mr. Chen's ratings were the most elevated across informants, with <strong>Clinically Significant</strong> scores for BSI, Attention Problems, Hyperactivity, and Learning Problems. <strong>At-Risk</strong> concerns were noted for Adaptability, Leadership, and Study Skills. Mr. Chen's findings are highly consistent with parent ratings, providing cross-setting validation of Marcus's ADHD presentation.</p>
+
+<h2>Conners, Fourth Edition &ndash; Parent Short Form (Conners-4)</h2>
+<p>The <em>Conners-4</em> is a narrowband parent-completed measure of ADHD-related symptoms (T-score mean = 50, SD = 10). Validity indices were within the Acceptable range.</p>
+
+<table class="score-table">
+  <tr><th>Scale</th><th>T-Score</th><th>Classification</th></tr>
+  <tr><td>Inattention/Executive Dysfunction</td><td>78</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td>Hyperactivity</td><td>72</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td>Impulsivity</td><td>70</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td>Emotional Dysregulation</td><td>67</td><td class="ar">At-Risk</td></tr>
+  <tr><td><em>Impairment: Schoolwork</em></td><td>74</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td><em>Impairment: Peer Interactions</em></td><td>64</td><td class="ar">At-Risk</td></tr>
+  <tr><td><em>Impairment: Family Life</em></td><td>68</td><td class="ar">At-Risk</td></tr>
+</table>
+
+<p>Ms. Johnson's responses indicate <strong>Clinically Significant</strong> symptoms of inattention, hyperactivity, and impulsivity, with <strong>At-Risk</strong> emotional dysregulation. Academic impairment is Clinically Significant; peer and family impairment are At-Risk. These ratings are strongly consistent with ADHD, Combined Presentation.</p>
+
+<h2>Conners, Fourth Edition &ndash; Self-Report Short Form (Conners-4)</h2>
+<p>The <em>Conners-4</em> Self-Report is a narrowband self-completed measure for individuals aged 8 and older (T-score mean = 50, SD = 10). Validity indices were within the Acceptable range, indicating Marcus's responses are likely an accurate self-representation.</p>
+
+<table class="score-table">
+  <tr><th>Scale</th><th>T-Score</th><th>Classification</th></tr>
+  <tr><td>Inattention/Executive Dysfunction</td><td>66</td><td class="ar">At-Risk</td></tr>
+  <tr><td>Hyperactivity</td><td>64</td><td class="ar">At-Risk</td></tr>
+  <tr><td>Impulsivity</td><td>61</td><td class="ar">At-Risk</td></tr>
+  <tr><td>Emotional Dysregulation</td><td>58</td><td class="avg">Average</td></tr>
+  <tr><td>Learning Problems</td><td>68</td><td class="ar">At-Risk</td></tr>
+  <tr><td><em>Impairment: Schoolwork</em></td><td>66</td><td class="ar">At-Risk</td></tr>
+  <tr><td><em>Impairment: Peer Interactions</em></td><td>56</td><td class="avg">Average</td></tr>
+</table>
+
+<p>Marcus acknowledged difficulty staying focused, losing belongings, and acting quickly without thinking. His self-reported concerns are consistent with&mdash;though somewhat lower in severity than&mdash;parent and teacher ratings, which is typical for children with ADHD who may have limited self-awareness. These results corroborate the ADHD diagnosis from the child's own perspective.</p>
+
+<h2>Conners, Fourth Edition &ndash; Teacher Short Form (Conners-4)</h2>
+<p>The <em>Conners-4</em> Teacher Form is a narrowband teacher-completed measure (T-score mean = 50, SD = 10). Validity indices were within the Acceptable range.</p>
+
+<table class="score-table">
+  <tr><th>Scale</th><th>T-Score</th><th>Classification</th></tr>
+  <tr><td>Inattention/Executive Dysfunction</td><td>82</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td>Hyperactivity</td><td>77</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td>Impulsivity</td><td>74</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td>Emotional Dysregulation</td><td>66</td><td class="ar">At-Risk</td></tr>
+  <tr><td><em>Impairment: Schoolwork</em></td><td>80</td><td class="cs">Clinically Significant</td></tr>
+  <tr><td><em>Impairment: Peer Interactions</em></td><td>62</td><td class="ar">At-Risk</td></tr>
+</table>
+
+<p>Mr. Chen's ratings were the highest across all informants. <strong>Clinically Significant</strong> elevations were noted across all core ADHD symptom domains and in Schoolwork impairment. <strong>At-Risk</strong> concerns were noted for Peer Interactions. These teacher-rated findings, fully consistent with parent and self-report data, strongly support an ADHD, Combined Presentation diagnosis.</p>
+
+<!-- SUMMARY -->
+<h1>Summary / Clinical Impressions</h1>
+<p>Marcus James Johnson is a 9-year-old boy who was referred to IPS by his pediatrician. His caregivers reported significant concerns regarding inattention, hyperactivity, and impulse control difficulties impacting his functioning at home and school. During the evaluation session, Marcus demonstrated a high activity level, persistent fidgeting, frequent off-task behavior, impulsive responding, and difficulty sustaining attention on non-preferred tasks, all of which required ongoing redirection and support from the examiner.</p>
+<p><strong>Intellectual Functioning.</strong> Results from the <em>RIAS-2</em> indicate that Marcus's overall cognitive abilities fall within the <strong>Average</strong> range (CII = 96; PR = 39) compared to same-aged peers. His Verbal Intelligence Index (SS = 97) and Nonverbal Intelligence Index (SS = 95) were comparably developed with no significant discrepancy between domains. These results indicate that Marcus's cognitive capacity is consistent with his age group, and his observed academic underperformance is not attributable to global intellectual impairment. Rather, his difficulties with academic achievement appear to reflect the functional impact of his ADHD symptoms on learning efficiency, task completion, and academic engagement.</p>
+<p><strong>Adaptive Functioning.</strong> Per Ms. Johnson's responses on the <em>Vineland-3</em>, Marcus's overall adaptive behavior falls within the <strong>Low Average</strong> range (ABC = 83; PR = 13). Motor Skills are a notable strength (SS = 100). Communication (SS = 86) and Socialization (SS = 88) were in the Low Average range, while Daily Living Skills (SS = 79) fell in the Low range, consistent with caregiver reports that Marcus requires persistent adult prompting to complete hygiene and self-care routines. Maladaptive behavior scores were elevated in both Internalizing and Externalizing domains, consistent with the emotional outbursts, frustration intolerance, and impulsive behaviors reported by his parents.</p>
+<p><strong>Ruling Out Autism Spectrum Disorder (ASD).</strong> A diagnosis of ASD was considered given some of Marcus's social difficulties; however, current findings do not support this diagnosis. Marcus demonstrates a clear desire for social connection, maintains reciprocal friendships with 2&ndash;3 peers, and engages in appropriate and flexible social communication. His difficulties with social cue recognition and peer conflict are better explained by the inattentiveness, impulsivity, and emotional dysregulation associated with ADHD, rather than by core deficits in social cognition or motivation characteristic of ASD. No restricted and repetitive behaviors, unusual sensory sensitivities, or stereotyped speech patterns were reported or observed. Therefore, Marcus does not meet diagnostic criteria for Autism Spectrum Disorder at this time.</p>
+<p><strong>Attention-Deficit/Hyperactivity Disorder (ADHD), Combined Presentation.</strong> According to caregiver reports, teacher reports, clinical observations, and standardized assessment measures, Marcus displays behaviors consistent with the core diagnostic features of ADHD across both the Inattentive and Hyperactive-Impulsive domains.</p>
+<p>In the area of <strong>inattention</strong>, Marcus's parents and teacher consistently report that he has difficulty sustaining attention on non-preferred tasks, makes careless errors by rushing through work, fails to follow through on multi-step instructions, loses items necessary for tasks (e.g., homework, permission slips), is easily distracted by extraneous stimuli, and is frequently forgetful in daily activities. During the evaluation, he required repeated redirection, frequently left tasks incomplete, and had difficulty maintaining focus without examiner prompting.</p>
+<p>In the area of <strong>hyperactivity and impulsivity</strong>, multiple informants consistently describe Marcus as "constantly moving," with excessive fidgeting, difficulty remaining seated during meals and class, off-seat behavior during the evaluation, and a chronically high activity level throughout the day. Impulsive behaviors observed and reported include: blurting out answers before questions are completed, difficulty waiting his turn, acting without forethought, and interrupting conversations.</p>
+<p>These symptoms were present during the early childhood period (noted at Sunshine Daycare and Creative Kids Academy), are observed across multiple settings (home, school, and during this evaluation), and are causing clinically meaningful impairment in Marcus's academic performance (GPA of C+/B-, below-grade-level reading, math difficulties, writing struggles, detention, office referrals) and social functioning (peer conflicts, bossiness, difficulty reading social cues). Results from all three <em>Conners-4</em> informants and both <em>BASC-3</em> rating scales reflect Clinically Significant elevations in attention problems and hyperactivity, with consistent findings across home and school environments. Taken together, Marcus meets full DSM-5 criteria for a diagnosis of <strong>Attention-Deficit/Hyperactivity Disorder, Combined Presentation (DSM-5/ICD-10, F90.2)</strong>, as it best explains his current behavioral, social, and academic difficulties.</p>
+<p><strong>Academic Concerns.</strong> Marcus is performing below grade level in reading and written expression and received math tutoring in 3rd grade. While a formal achievement battery was not administered during this evaluation, his academic struggles are consistent with the functional impact of ADHD on learning. It is recommended that Marcus's academic progress be monitored closely through Response to Intervention (RTI) strategies and a 504 Accommodations Plan. If academic concerns persist despite appropriate ADHD interventions and accommodations, a follow-up psychoeducational evaluation to assess for Specific Learning Disorder is recommended.</p>
+<p><strong>Social-Emotional and Behavioral Functioning.</strong> Marcus is described by his parents as a generally good-natured, outgoing child who enjoys social interaction. The emotional outbursts reported by his parents (2&ndash;3 times per week, lasting 15&ndash;30 minutes) are consistent with the emotional dysregulation that frequently co-occurs with ADHD and represents a significant area of impairment. There is no current evidence of a primary depressive or anxiety disorder warranting a separate diagnosis; however, his sleep onset difficulties (30&ndash;45 minutes to fall asleep) and occasional nightmares should be monitored, as untreated ADHD is associated with elevated risk for anxiety and mood difficulties over time.</p>
+<p>In all, Marcus demonstrates many strengths, including average cognitive abilities, strong motor skills, enthusiasm for areas of personal interest, and a genuine desire to connect with peers. With appropriate intervention, support, and treatment for ADHD, Marcus has strong potential for improved academic performance, behavioral regulation, and social success.</p>
+
+<!-- DIAGNOSES -->
+<h1>Diagnoses</h1>
+<div class="diagnoses-block">
+  <p><strong>Attention-Deficit/Hyperactivity Disorder, Combined Presentation</strong> (DSM-5/ICD-10, F90.2)</p>
+  <p><em>Rule Out / Monitor:</em> Specific Learning Disorder in Reading (DSM-5/ICD-10, F81.0) &mdash; pending response to ADHD treatment and academic intervention</p>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<h1>Recommendations</h1>
+<p>Based on the results of the current evaluation, the following recommendations are made:</p>
+<ol>
+  <li><strong>Medical Consultation for ADHD Treatment.</strong> It is recommended that Marcus's caregivers share the results of this evaluation with his pediatrician, Dr. Keisha Williams, M.D., or a developmental pediatrician to discuss evidence-based treatment options for ADHD. Stimulant medications (e.g., methylphenidate or amphetamine-based agents) are a first-line, well-supported treatment for ADHD in children and are often most effective when combined with behavioral interventions. Medication decisions should be made in collaboration with Marcus's medical provider and family.</li>
+
+  <li><strong>504 Accommodations Plan.</strong> It is recommended that Marcus's school establish a 504 Accommodations Plan, as the school has already suggested. Recommended accommodations include:
+    <ol class="alpha">
+      <li><strong>Extended time</strong> on all tests, in-class assignments, and standardized assessments.</li>
+      <li><strong>Preferential seating</strong> near the teacher and away from auditory and visual distractions (e.g., windows, doors, high-traffic areas).</li>
+      <li><strong>Reduced distraction testing environment</strong> (e.g., small group or separate setting for exams).</li>
+      <li><strong>Chunked assignments</strong>: Breaking longer tasks into smaller, more manageable steps with incremental deadlines.</li>
+      <li><strong>Frequent check-ins</strong> from the teacher to monitor task progress and redirect as needed.</li>
+      <li><strong>Organizational supports</strong> such as assignment notebooks, color-coded folders, and daily planners.</li>
+      <li><strong>Copies of teacher notes or lecture outlines</strong> provided in advance.</li>
+      <li><strong>Scheduled movement breaks</strong> built into the school day.</li>
+      <li><strong>Permission to use fidget tools</strong> (e.g., fidget spinner, stress ball, kick bands on chair legs) that do not disrupt others.</li>
+      <li><strong>Immediate and specific praise</strong> for on-task behavior and task completion.</li>
+    </ol>
+  </li>
+
+  <li><strong>Academic Support Strategies.</strong> Given Marcus's below-grade-level performance in reading and written expression, the following supports are recommended:
+    <ol class="alpha">
+      <li><em>Response to Intervention (RTI)</em>: Marcus's reading and writing progress should be monitored through an RTI framework. If he does not make adequate progress, a formal psychoeducational evaluation to assess for Specific Learning Disorder should be pursued.</li>
+      <li><strong>Khan Academy</strong> (www.khanacademy.org) is a free online tutoring resource covering reading, math, science, and other subjects.</li>
+      <li><strong>Reading:</strong> Provide books at Marcus's independent reading level. Allow 20&ndash;30 minutes of daily independent reading on topics of interest. Consider audiobooks as a supplemental support.</li>
+      <li><strong>Writing:</strong> Allow Marcus to dictate responses or use voice-to-text technology. Remove "neatness" as a grading criterion where content is the focus. Allow typing as an alternative to handwriting.</li>
+      <li><strong>Mathematics:</strong> Allow use of a calculator or math fact chart for multi-step problems. Avoid speed-based math drills. Use visual/concrete supports to illustrate mathematical concepts. Schedule more cognitively demanding subjects in the morning.</li>
+    </ol>
+  </li>
+
+  <li><strong>Behavioral Strategies at Home.</strong>
+    <ol class="alpha">
+      <li><strong>Establish consistent daily routines</strong> for morning, after-school, and bedtime.</li>
+      <li><strong>Give short, specific, one-step directions</strong> and wait for Marcus to complete each before adding the next.</li>
+      <li><strong>Provide 5-, 2-, and 1-minute warnings</strong> before transitions between activities.</li>
+      <li><strong>Differential reinforcement</strong>: Praise and immediately reward desired behaviors. Use planned ignoring of minor attention-seeking behaviors.</li>
+      <li><strong>Token Economy System</strong>: Implement a token economy in which Marcus earns points/tokens for completing chores, homework, and adaptive skills tasks. Allow him to "cash out" tokens for preferred privileges.</li>
+      <li><strong>Increase expectations for adaptive skills</strong>: Incrementally raise expectations for personal hygiene and simple household chores. Use visual checklists and provide specific praise when Marcus completes routines independently.</li>
+    </ol>
+  </li>
+
+  <li><strong>Parent Training.</strong> Marcus's caregivers would benefit from participation in a structured <strong>Parent Training in Behavior Management</strong> program (e.g., Parent-Child Interaction Therapy [PCIT] or a Parent Training for ADHD program). Local providers include:
+    <ul>
+      <li>Universal Parenting Place (Memphis area)</li>
+      <li>Malissa Duckworth, LCSW &ndash; (901) 268-2562</li>
+    </ul>
+    Recommended books:
+    <ul>
+      <li><em>Your Defiant Child: 8 Steps to Better Behavior</em> by Russell A. Barkley, PhD and Christine M. Benton</li>
+      <li><em>Taking Charge of ADHD: The Complete, Authoritative Guide for Parents</em> by Russell A. Barkley, PhD</li>
+      <li><em>SOS Help for Parents</em> by Lynn Clark, PhD</li>
+    </ul>
+  </li>
+
+  <li><strong>Executive Functioning and Organizational Skills.</strong>
+    <ol class="alpha">
+      <li>Use a <strong>daily visual schedule</strong> displayed in a consistent, accessible location.</li>
+      <li>Use a <strong>paper planner or digital calendar</strong> with reminder alerts to track assignments and due dates.</li>
+      <li>Break long-term projects into <strong>smaller steps with specific deadlines</strong> posted on a calendar.</li>
+      <li>Use <strong>color-coded folders and binders</strong> organized by subject.</li>
+      <li>Establish a dedicated, low-distraction <strong>homework station</strong> with all necessary materials within reach.</li>
+      <li>Establish a <strong>consistent homework time</strong> immediately after a brief physical activity break following school.</li>
+    </ol>
+  </li>
+
+  <li><strong>Sleep Hygiene.</strong> Given Marcus's difficulty falling asleep (30&ndash;45 minutes) and below-recommended sleep duration:
+    <ol class="alpha">
+      <li>Establish a <strong>consistent bedtime</strong> (ideally 8:30 PM) and wake time every day, including weekends.</li>
+      <li>Implement a <strong>calm, predictable bedtime routine</strong> (e.g., shower, brush teeth, 10&ndash;15 minutes of reading, lights out).</li>
+      <li>Remove all <strong>electronic devices</strong> from the bedroom at least one hour before bedtime.</li>
+      <li>Reserve Marcus's bed <strong>exclusively for sleep</strong> (not homework or screen time).</li>
+      <li>Use <strong>relaxation strategies</strong> at bedtime such as deep breathing or progressive muscle relaxation.</li>
+      <li>If sleep onset difficulties persist, consultation with Marcus's pediatrician is recommended.</li>
+    </ol>
+  </li>
+
+  <li><strong>Social Skills Support.</strong>
+    <ol class="alpha">
+      <li>Enroll Marcus in a <strong>structured social skills group</strong> through IPS or a community provider:
+        <ul>
+          <li>Emily Vanderpool at Germantown Behavioral Solutions &ndash; (901)-646-2797</li>
+          <li>Dr. Allison Coke-Schultz &amp; Associates &ndash; (901)-299-0703</li>
+        </ul>
+      </li>
+      <li>Continue to encourage <strong>extracurricular participation</strong> (e.g., soccer, team sports, after-school clubs).</li>
+      <li>Use <strong>role-play</strong> at home to practice conversational skills such as waiting one's turn to speak and listening without interrupting.</li>
+    </ol>
+  </li>
+
+  <li><strong>ADHD Support Resources.</strong>
+    <ul>
+      <li><strong>CHADD</strong> (Children and Adults with ADHD): www.chadd.org &mdash; local chapters, webinars, and family resources.</li>
+      <li><strong>ADDitude Magazine</strong>: www.additudemag.com &mdash; research-based strategies and expert advice for parents and educators.</li>
+      <li><em>Thriving with ADHD: Workbook for Kids</em> by Kelli Miller &mdash; a child-friendly activity book to help Marcus understand and manage his ADHD.</li>
+    </ul>
+  </li>
+
+  <li><strong>Academic Monitoring and Follow-Up Evaluation.</strong> Given Marcus's below-grade-level reading and ongoing writing difficulties, it is recommended that his academic progress be formally reviewed at the end of each grading period. If Marcus does not demonstrate adequate improvement following implementation of a 504 Plan and ADHD treatment, a <strong>comprehensive psychoeducational evaluation</strong> to assess for Specific Learning Disorder in Reading and/or Written Expression should be initiated.</li>
+
+  <li><strong>Re-evaluation.</strong> Given the length of testing waitlists and the requirement for updated evaluations to maintain services and accommodations, it is recommended that Marcus be placed on the waitlist for re-evaluation within the next <strong>18&ndash;24 months</strong> to assess his response to treatment, monitor academic progress, and update recommendations as needed (https://irbypsychservices.net/waitlists).</li>
+</ol>
+
+<hr class="thick" style="margin-top:24pt;">
+
+<p>It was a pleasure to work with Marcus. If there are questions regarding the status of your report, or if we can be of further assistance, please feel free to contact IPS at the number above.</p>
+
+<table class="sig-block" style="margin-top:24pt;">
+  <tr>
+    <td style="width:50%;">
+      ____________________________________<br>
+      <strong>Sarah M. Irby, Ph.D.</strong><br>
+      Psychologist: MS #58-1020<br>
+      Board Certified Behavior Analyst
+    </td>
+    <td style="width:50%;">
+      ____________________________________<br>
+      <strong>Graduate Student Name, M.S.</strong><br>
+      Psychology Graduate Student
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>"""
+
+with open("/home/user/Shanique-/Marcus_Johnson_Report.html", "w") as f:
+    f.write(html_content)
+
+print("HTML written successfully.")
