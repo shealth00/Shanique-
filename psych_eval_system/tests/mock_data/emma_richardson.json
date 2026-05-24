@@ -1,0 +1,229 @@
+{
+  "patient": {
+    "first_name": "Emma",
+    "last_name": "Richardson",
+    "birth_date": "2019-03-15",
+    "age_years": 5,
+    "age_months": 3,
+    "gender": "Female",
+    "city": "Memphis",
+    "state": "Tennessee",
+    "family_info": {
+      "parents": [
+        {"name": "Margaret Richardson", "relationship": "Mother"},
+        {"name": "David Richardson", "relationship": "Father"}
+      ],
+      "siblings": [{"name": "Thomas Richardson", "age": 8, "gender": "Male"}],
+      "household_members": 4,
+      "family_history": ["Autism in maternal uncle", "Anxiety in mother"],
+      "recent_stressors": [],
+      "social_supports": ["Maternal grandparents", "Church community"]
+    },
+    "developmental_history": {
+      "birth_type": "full-term",
+      "weeks_gestation": 39,
+      "birth_method": "vaginal",
+      "pregnancy_complications": [],
+      "crawling_months": 7,
+      "walking_months": 14,
+      "first_word_months": 16,
+      "first_sentences_years": 3,
+      "current_language_level": "Phrases and short sentences; difficulty with conversation initiation",
+      "medical_history": [],
+      "current_medications": [],
+      "vision_hearing_notes": "Vision and hearing screened March 2024; within normal limits",
+      "toilet_training_notes": "Toilet trained at age 4"
+    },
+    "educational_history": {
+      "early_intervention": ["Speech-Language Therapy (TEIS) from age 2 to 3"],
+      "current_school": "Sunshine Elementary",
+      "current_grade": "Pre-K",
+      "iep_status": true,
+      "iep_category": "Developmental Delay",
+      "classroom_type": "Inclusion classroom with support",
+      "school_services": ["Speech-Language Therapy (2x/week)", "Occupational Therapy (1x/week)"],
+      "outside_services": ["ABA Therapy (10 hrs/week)"],
+      "academic_performance": "Performing below grade level; progressing with support"
+    },
+    "referral_info": {
+      "referral_source": "Dr. James Mitchell, MD – Memphis Pediatrics",
+      "reason_for_evaluation": "Concerns regarding social communication delays, limited peer interaction, and repetitive behaviors",
+      "primary_concerns": [
+        "Social communication delays",
+        "Limited eye contact and joint attention",
+        "Repetitive play patterns and interest in spinning objects",
+        "Sensory sensitivities to loud noises",
+        "Difficulty with transitions"
+      ],
+      "evaluation_date": "2024-10-15",
+      "report_date": "2024-10-22",
+      "intake_date": "2024-09-10",
+      "examiner": "Dr. S. Irby, Psy.D.",
+      "clinic_name": "Irby Psychological Services (IPS)"
+    },
+    "behavioral_observations": {
+      "accompanied_by": ["Mother (Margaret Richardson)", "Father (David Richardson)"],
+      "appearance": "Appropriately dressed and groomed",
+      "sensory_adequacy": "Vision and hearing appeared adequate; responded to visual and auditory stimuli",
+      "eye_contact": "Minimal and fleeting eye contact with examiners and caregivers",
+      "communication_level": "Primarily phrase-level speech; initiated few spontaneous communications",
+      "affect": "Flat affect; limited shared enjoyment",
+      "activity_level": "Mildly elevated; occasional out-of-seat behavior",
+      "attention_concentration": "Variable; required frequent redirections and praise",
+      "response_to_examiners": "Inconsistently responsive to name; followed simple one-step directions",
+      "repetitive_behaviors_observed": [
+        "Hand-flapping when excited",
+        "Repetitive lining of test materials"
+      ],
+      "testing_modifications": [
+        "Frequent praise and tangible reinforcement",
+        "Frequent short breaks",
+        "Instructions repeated as needed"
+      ],
+      "results_validity": "Results are considered a valid estimate of current functioning, consistent with caregiver report"
+    }
+  },
+  "clinical_input": {
+    "wppsi_iv": {
+      "administered": true,
+      "fsiq": {
+        "name": "Full Scale IQ",
+        "standard_score": 68,
+        "confidence_interval_low": 63,
+        "confidence_interval_high": 75,
+        "percentile": 2
+      },
+      "verbal_comprehension": {
+        "name": "Verbal Comprehension Index",
+        "standard_score": 64,
+        "confidence_interval_low": 59,
+        "confidence_interval_high": 72,
+        "percentile": 1
+      },
+      "visual_spatial": {
+        "name": "Visual Spatial Index",
+        "standard_score": 74,
+        "confidence_interval_low": 68,
+        "confidence_interval_high": 82,
+        "percentile": 4
+      },
+      "fluid_reasoning": {
+        "name": "Fluid Reasoning Index",
+        "standard_score": 71,
+        "confidence_interval_low": 65,
+        "confidence_interval_high": 79,
+        "percentile": 3
+      },
+      "working_memory": {
+        "name": "Working Memory Index",
+        "standard_score": 69,
+        "confidence_interval_low": 63,
+        "confidence_interval_high": 78,
+        "percentile": 2
+      },
+      "processing_speed": {
+        "name": "Processing Speed Index",
+        "standard_score": 72,
+        "confidence_interval_low": 65,
+        "confidence_interval_high": 81,
+        "percentile": 3
+      },
+      "subtests": [
+        {"name": "Information", "scaled_score": 4},
+        {"name": "Similarities", "scaled_score": 3},
+        {"name": "Block Design", "scaled_score": 5},
+        {"name": "Object Assembly", "scaled_score": 6},
+        {"name": "Matrix Reasoning", "scaled_score": 5},
+        {"name": "Picture Concepts", "scaled_score": 4},
+        {"name": "Picture Memory", "scaled_score": 4},
+        {"name": "Zoo Locations", "scaled_score": 5},
+        {"name": "Bug Search", "scaled_score": 5},
+        {"name": "Cancellation", "scaled_score": 4}
+      ]
+    },
+    "vineland": {
+      "administered": true,
+      "adaptive_behavior_composite": {
+        "name": "Adaptive Behavior Composite",
+        "standard_score": 62,
+        "confidence_interval_low": 57,
+        "confidence_interval_high": 67,
+        "percentile": 1
+      },
+      "communication": {
+        "name": "Communication Domain",
+        "standard_score": 60,
+        "confidence_interval_low": 54,
+        "confidence_interval_high": 66,
+        "percentile": 1
+      },
+      "daily_living_skills": {
+        "name": "Daily Living Skills Domain",
+        "standard_score": 65,
+        "confidence_interval_low": 59,
+        "confidence_interval_high": 71,
+        "percentile": 1
+      },
+      "socialization": {
+        "name": "Socialization Domain",
+        "standard_score": 58,
+        "confidence_interval_low": 52,
+        "confidence_interval_high": 64,
+        "percentile": 1
+      },
+      "motor_skills": {
+        "name": "Motor Skills Domain",
+        "standard_score": 76,
+        "confidence_interval_low": 70,
+        "confidence_interval_high": 83,
+        "percentile": 5
+      }
+    },
+    "ados_2": {
+      "administered": true,
+      "module": 2,
+      "social_affect_score": 13,
+      "restricted_repetitive_behavior_score": 4,
+      "total_score": 17,
+      "calibrated_severity_score": 8,
+      "comparison_score": 8,
+      "meets_asd_cutoff": true
+    },
+    "basc3_parent": {
+      "administered": true,
+      "form": "Parent",
+      "externalizing_problems": 52,
+      "internalizing_problems": 55,
+      "behavioral_symptoms_index": 68,
+      "adaptive_skills": 38,
+      "attention_problems": 72,
+      "hyperactivity": 58,
+      "anxiety": 55,
+      "depression": 50,
+      "atypicality": 74,
+      "withdrawal": 71
+    },
+    "basc3_teacher": {
+      "administered": true,
+      "form": "Teacher",
+      "externalizing_problems": 49,
+      "internalizing_problems": 52,
+      "behavioral_symptoms_index": 65,
+      "adaptive_skills": 36,
+      "attention_problems": 68,
+      "hyperactivity": 55,
+      "atypicality": 71,
+      "withdrawal": 73
+    },
+    "srs_2_parent": {
+      "administered": true,
+      "form": "Parent",
+      "total_t_score": 82,
+      "social_awareness": 75,
+      "social_cognition": 78,
+      "social_communication": 84,
+      "social_motivation": 79,
+      "restricted_repetitive_behavior": 71
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{#
+  Jinja2 master template — mirrors the 2025 COMPREHENSIVE TEMPLATE structure.
+  All variables are injected from FullReport + PatientPII.
+  Sections are conditionally rendered based on data presence.
+#}
+**CONFIDENTIAL**
+**PSYCHOLOGICAL EVALUATION**
+
+Client Name:      {{ patient.full_name }}
+Birth Date:       {{ patient.birth_date.strftime('%m/%d/%Y') }}
+Age:              {{ patient.age_years }}-years, {{ patient.age_months }}-months
+Sex:              {{ patient.gender }}
+Evaluation Date:  {{ patient.referral_info.evaluation_date or '–' }}
+Date of Report:   {{ patient.referral_info.report_date or '–' }}
+{% if patient.family_info.parents %}
+Parent/Guardian:  {{ patient.family_info.parents[0].name }}
+{% endif %}
+Clinic:           {{ patient.referral_info.clinic_name }}
+
+---
+
+## REASON FOR EVALUATION
+
+{{ sections.reason_for_evaluation }}
+
+---
+
+## PSYCHODIAGNOSTIC PROCEDURES
+
+{{ sections.procedures }}
+
+---
+
+## CAREGIVER INTERVIEW
+
+{{ sections.caregiver_interview }}
+
+---
+
+## BEHAVIORAL OBSERVATIONS
+
+{{ sections.behavioral_observations }}
+
+---
+
+## TEST RESULTS
+
+### Score Descriptor Reference (Kranzler & Floyd, 2020)
+
+| Standard Score | Scaled Score | T-Score | Descriptor |
+|:--:|:--:|:--:|:--|
+| ≥140 | 18+ | 77+ | Extremely High |
+| 130–139 | 16–17 | 70–76 | Very High |
+| 120–129 | 14–15 | 64–69 | High |
+| 110–119 | 12–13 | 57–63 | High Average |
+| 90–109 | 9–11 | 44–56 | Average |
+| 80–89 | 7–8 | 37–43 | Low Average |
+| 70–79 | 5–6 | 31–36 | Low |
+| 60–69 | 3–4 | 24–30 | Very Low |
+| ≤59 | 1–2 | ≤23 | Extremely Low |
+
+{% for section in test_sections %}
+---
+
+{{ section.content }}
+
+{% endfor %}
+
+---
+
+## SUMMARY AND CLINICAL IMPRESSIONS
+
+{{ sections.summary }}
+
+---
+
+## RECOMMENDATIONS
+
+{{ sections.recommendations }}
+
+---
+
+*This evaluation was completed by {{ patient.referral_info.examiner or '[Examiner Name, Credentials]' }} at
+{{ patient.referral_info.clinic_name }}. All results are confidential. A licensed psychologist must
+review this report before clinical use or distribution.*
