@@ -1,0 +1,60 @@
+{
+  "name": "Shanique EHR — EDI X12 / Node.js",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Forward Express API port and a debug port
+  "forwardPorts": [3001, 9229],
+  "portsAttributes": {
+    "3001": { "label": "EDI API Server", "onAutoForward": "notify" },
+    "9229": { "label": "Node Debugger",  "onAutoForward": "silent" }
+  },
+
+  // Install dependencies immediately after the container is created
+  "postCreateCommand": "npm install",
+
+  // Drop into the workspace root
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // JavaScript / Node
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "christian-kohler.npm-intellisense",
+        "eg2.vscode-npm-script",
+
+        // Testing
+        "orta.vscode-jest",
+
+        // REST client — handy for manually hitting /api/edi/837p
+        "humao.rest-client",
+
+        // Git & GitHub
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+
+        // General quality-of-life
+        "editorconfig.editorconfig",
+        "streetsidesoftware.code-spell-checker",
+        "mikestead.dotenv"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2,
+        "eslint.validate": ["javascript"],
+        "npm.packageManager": "npm",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "jest.autoRun": "off"
+      }
+    }
+  },
+
+  "remoteUser": "node"
+}
