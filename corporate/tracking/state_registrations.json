@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "description": "State Registration Certificates — multi-state compliance tracking for all MSO entities",
+  "last_updated": "2026-05-30",
+
+  "registrations": [
+    {
+      "entity_id": "IHM-PARENT",
+      "legal_name": "Integrated Healthcare MSO, Inc.",
+      "registration_type": "Domestic Corporation",
+      "state": "TX",
+      "filing_date": "",
+      "file_number": "",
+      "registered_agent_name": "",
+      "registered_agent_address": "",
+      "annual_report_due_date": "",
+      "status": "pending",
+      "certificate_path": "corporate/certificates/TX_registration_IHM_parent.pdf",
+      "notes": "Home state formation"
+    },
+    {
+      "entity_id": "MSO-TX",
+      "legal_name": "MSO-Texas LLC",
+      "registration_type": "Domestic LLC",
+      "state": "TX",
+      "filing_date": "",
+      "file_number": "",
+      "registered_agent_name": "",
+      "registered_agent_address": "",
+      "annual_report_due_date": "",
+      "status": "pending",
+      "certificate_path": "corporate/certificates/TX_registration_MSO_TX.pdf",
+      "notes": "Home state formation"
+    },
+    {
+      "entity_id": "MSO-REGIONAL",
+      "legal_name": "MSO-Regional Entities",
+      "registration_type": "Foreign LLC (multi-state)",
+      "states": [
+        {
+          "state": "TX",
+          "registration_type": "Domestic",
+          "filing_date": "",
+          "file_number": "",
+          "annual_report_due_date": "",
+          "status": "pending",
+          "certificate_path": "corporate/certificates/TX_registration_MSO_regional.pdf"
+        }
+      ],
+      "notes": "Add a new state object for each state where foreign qualification is filed"
+    }
+  ],
+
+  "compliance_calendar": {
+    "TX": {
+      "annual_report_name": "Public Information Report (PIR)",
+      "due_date": "May 15 annually",
+      "filing_fee": "$0 (no fee for PIR)",
+      "filing_agency": "Texas Comptroller of Public Accounts",
+      "url": "https://www.comptroller.texas.gov"
+    }
+  },
+
+  "notes": [
+    "Foreign qualification (Certificate of Authority) required in each state where the MSO conducts business",
+    "Failure to register as a foreign entity can result in fines and inability to bring legal action in that state",
+    "Registered agent must maintain a physical address in each registered state"
+  ]
+}

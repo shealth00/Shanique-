@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "description": "IRS EIN Applications and CP-575 Confirmation Letters for all MSO entities",
+  "last_updated": "2026-05-30",
+
+  "entities": [
+    {
+      "entity_id": "IHM-PARENT",
+      "legal_name": "Integrated Healthcare MSO, Inc.",
+      "ein": "",
+      "application_date": "",
+      "confirmation_date": "",
+      "confirmation_document": "CP-575",
+      "confirmation_received": false,
+      "storage_location": "corporate/certificates/CP575_IHM_parent.pdf",
+      "notes": "Filed via IRS Form SS-4; keep original CP-575 in secure document vault"
+    },
+    {
+      "entity_id": "MSO-TX",
+      "legal_name": "MSO-Texas LLC",
+      "ein": "",
+      "application_date": "",
+      "confirmation_date": "",
+      "confirmation_document": "CP-575",
+      "confirmation_received": false,
+      "storage_location": "corporate/certificates/CP575_MSO_TX.pdf",
+      "notes": ""
+    },
+    {
+      "entity_id": "MSO-REGIONAL",
+      "legal_name": "MSO-Regional Entities",
+      "ein": "",
+      "application_date": "",
+      "confirmation_date": "",
+      "confirmation_document": "CP-575",
+      "confirmation_received": false,
+      "storage_location": "corporate/certificates/CP575_MSO_regional.pdf",
+      "notes": "Separate EIN required for each distinct legal entity if structured individually"
+    }
+  ],
+
+  "retention_policy": {
+    "minimum_retention_years": "permanent",
+    "reason": "EINs are permanent identifiers; CP-575s are required for banking, payroll, and licensing",
+    "secure_backup": true
+  }
+}

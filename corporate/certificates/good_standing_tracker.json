@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "description": "Certificate of Good Standing tracker — all MSO entities",
+  "last_updated": "2026-05-30",
+  "policy": "Refresh certificates within 90 days of any financing event, contract execution, or licensing application",
+
+  "certificates": [
+    {
+      "entity_id": "IHM-PARENT",
+      "legal_name": "Integrated Healthcare MSO, Inc.",
+      "state": "TX",
+      "issued_date": "",
+      "expiry_advisory": "90 days from issue date for most third-party purposes",
+      "issuing_agency": "Texas Secretary of State",
+      "order_url": "https://www.sos.state.tx.us",
+      "status": "not_obtained",
+      "certificate_path": "corporate/certificates/good_standing_IHM_parent.pdf",
+      "last_pulled_for": "",
+      "notes": ""
+    },
+    {
+      "entity_id": "MSO-TX",
+      "legal_name": "MSO-Texas LLC",
+      "state": "TX",
+      "issued_date": "",
+      "expiry_advisory": "90 days from issue date for most third-party purposes",
+      "issuing_agency": "Texas Secretary of State",
+      "order_url": "https://www.sos.state.tx.us",
+      "status": "not_obtained",
+      "certificate_path": "corporate/certificates/good_standing_MSO_TX.pdf",
+      "last_pulled_for": "",
+      "notes": ""
+    },
+    {
+      "entity_id": "MSO-REGIONAL",
+      "legal_name": "MSO-Regional Entities",
+      "states": [
+        {
+          "state": "TX",
+          "issued_date": "",
+          "issuing_agency": "Texas Secretary of State",
+          "status": "not_obtained",
+          "certificate_path": "corporate/certificates/good_standing_MSO_regional_TX.pdf"
+        }
+      ],
+      "notes": "Pull separate certificate from each state's Secretary of State office"
+    }
+  ],
+
+  "trigger_events": [
+    "Bank account opening or financing",
+    "Payer credentialing / re-credentialing",
+    "State Medicaid enrollment",
+    "New managed care contract execution",
+    "Real estate lease or purchase",
+    "Merger, acquisition, or sale",
+    "Any licensing application requiring good standing"
+  ]
+}

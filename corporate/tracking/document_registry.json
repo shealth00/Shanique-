@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-05-30",
+  "maintained_by": "admin@sallyhealth.org",
+
+  "entities": [
+    {
+      "entity_id": "IHM-PARENT",
+      "legal_name": "Integrated Healthcare MSO, Inc.",
+      "entity_type": "Corporation",
+      "role": "Parent Company",
+      "state_of_formation": "TX",
+      "formation_date": "",
+      "ein": "",
+      "status": "active",
+      "registered_agent": {
+        "name": "",
+        "address": "",
+        "phone": ""
+      }
+    },
+    {
+      "entity_id": "MSO-TX",
+      "legal_name": "MSO-Texas LLC",
+      "entity_type": "LLC",
+      "role": "Regional MSO",
+      "state_of_formation": "TX",
+      "formation_date": "",
+      "ein": "",
+      "status": "active",
+      "parent_entity": "IHM-PARENT",
+      "registered_agent": {
+        "name": "",
+        "address": "",
+        "phone": ""
+      }
+    },
+    {
+      "entity_id": "MSO-REGIONAL",
+      "legal_name": "MSO-Regional Entities",
+      "entity_type": "LLC",
+      "role": "Multi-State Regional MSO",
+      "states": [],
+      "formation_date": "",
+      "ein": "",
+      "status": "active",
+      "parent_entity": "IHM-PARENT",
+      "registered_agent": {
+        "name": "",
+        "address": "",
+        "phone": ""
+      }
+    }
+  ],
+
+  "documents": [
+    {
+      "doc_id": "DOC-001",
+      "category": "1.1",
+      "type": "Articles of Incorporation",
+      "entity_id": "IHM-PARENT",
+      "description": "Articles of Incorporation — Integrated Healthcare MSO, Inc.",
+      "filed_date": "",
+      "approved_date": "",
+      "filing_state": "TX",
+      "filing_number": "",
+      "file_path": "corporate/templates/articles_of_incorporation_IHM.md",
+      "status": "pending",
+      "renewal_required": false,
+      "notes": ""
+    },
+    {
+      "doc_id": "DOC-002",
+      "category": "1.1",
+      "type": "Operating Agreement",
+      "entity_id": "MSO-TX",
+      "description": "Operating Agreement — MSO-Texas LLC",
+      "filed_date": "",
+      "executed_date": "",
+      "file_path": "corporate/templates/operating_agreement_MSO_TX.md",
+      "status": "pending",
+      "renewal_required": false,
+      "notes": ""
+    },
+    {
+      "doc_id": "DOC-003",
+      "category": "1.1",
+      "type": "Operating Agreement",
+      "entity_id": "MSO-REGIONAL",
+      "description": "Operating Agreement — MSO-Regional Entities (multi-state)",
+      "executed_date": "",
+      "file_path": "corporate/templates/operating_agreement_MSO_regional.md",
+      "status": "pending",
+      "renewal_required": false,
+      "states_covered": [],
+      "notes": ""
+    },
+    {
+      "doc_id": "DOC-004",
+      "category": "1.1",
+      "type": "EIN Application & Confirmation",
+      "entity_id": "ALL",
+      "description": "IRS EIN Applications and CP-575 Confirmation Letters — all entities",
+      "file_path": "corporate/tracking/ein_registry.json",
+      "status": "pending",
+      "renewal_required": false,
+      "notes": "IRS Form SS-4; retain CP-575 confirmation letters"
+    },
+    {
+      "doc_id": "DOC-005",
+      "category": "1.1",
+      "type": "State Registration Certificate",
+      "entity_id": "ALL",
+      "description": "State Registration Certificates — multi-state compliance",
+      "file_path": "corporate/tracking/state_registrations.json",
+      "status": "pending",
+      "renewal_required": true,
+      "renewal_frequency": "annual",
+      "notes": "Foreign qualification required in each operating state"
+    },
+    {
+      "doc_id": "DOC-006",
+      "category": "1.1",
+      "type": "Certificate of Good Standing",
+      "entity_id": "ALL",
+      "description": "Certificates of Good Standing — all entities",
+      "file_path": "corporate/certificates/good_standing_tracker.json",
+      "status": "pending",
+      "renewal_required": true,
+      "renewal_frequency": "annual",
+      "notes": "Pull fresh certificates within 90 days of any financing or contract execution"
+    }
+  ],
+
+  "compliance_reminders": {
+    "annual_report_due": "varies by state",
+    "registered_agent_renewal": "annual",
+    "good_standing_refresh": "90-day rule before major transactions",
+    "ein_verification": "no expiration — retain originals securely"
+  }
+}
