@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Plus, Trash2, Download, Play, Loader } from 'lucide-react';
+import { Plus, Trash2, Download, Play, Loader, ShieldCheck } from 'lucide-react';
+import EligibilityCheck from './src/components/EligibilityCheck';
 
 /**
  * Psychological Evaluation Report Generation System
@@ -145,6 +146,9 @@ export default function PsychReportGenerator() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': process.env.REACT_APP_ANTHROPIC_API_KEY || '',
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
@@ -405,9 +409,91 @@ Licensed psychologist review and signature required before distribution.
             </div>
           </div>
 
-          {/* Middle Panel - Patient Form & Agents */}
+          {/* Middle Panel - Tabs + Content */}
           <div className="col-span-2">
-            {currentPatient ? (
+            {/* Tab Bar */}
+            {currentPatient && (
+              <div className="flex gap-1 mb-4 bg-white rounded-lg shadow p-1">
+                {[
+                  { key: 'patients',    label: 'Patient Info',       icon: null },
+                  { key: 'eligibility', label: 'Eligibility Check',  icon: <ShieldCheck size={15} /> },
+                  { key: 'report',      label: 'Report',             icon: null },
+                ].map(tab => (
+                  <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                    className={`flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded text-sm font-medium transition ${
+                      activeTab === tab.key
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}>
+                    {tab.icon}{tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Eligibility Tab */}
+            {currentPatient && activeTab === 'eligibility' && (
+              <EligibilityCheck prefillPatient={currentPatient} />
+            )}
+
+            {/* Report Tab */}
+            {currentPatient && activeTab === 'report' && (
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">Report Generation Agents</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Click "Generate" to create each report section using AI agents
+                  </p>
+                  <button
+                    onClick={() => generateCompleteReport(currentPatient.id)}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 flex items-center justify-center gap-2"
+                  >
+                    <Play size={18} /> Generate Complete Report
+                  </button>
+                  <div className="space-y-3">
+                    {Object.entries(AGENTS).map(([key, agent]) => (
+                      <div key={key} className="border border-gray-300 rounded p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-bold text-gray-800">{agent.name}</h4>
+                            <p className="text-sm text-gray-600">{agent.description}</p>
+                          </div>
+                          <button
+                            onClick={() => generateReportSection(currentPatient.id, key)}
+                            disabled={generatingReports[key]}
+                            className="ml-2 bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm flex items-center gap-1"
+                          >
+                            {generatingReports[key] ? (
+                              <><Loader size={14} className="animate-spin" /> Generating...</>
+                            ) : (
+                              <><Play size={14} /> Generate</>
+                            )}
+                          </button>
+                        </div>
+                        {patientReports[key] && (
+                          <div className="mt-3 bg-green-50 border border-green-200 rounded p-2">
+                            <p className="text-xs text-green-700 font-semibold mb-2">✓ Generated</p>
+                            <p className="text-xs text-gray-700 line-clamp-3">
+                              {patientReports[key].substring(0, 150)}...
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {Object.keys(patientReports).length > 0 && (
+                  <button
+                    onClick={() => exportReport(currentPatient.id)}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded flex items-center justify-center gap-2"
+                  >
+                    <Download size={20} /> Export Report
+                  </button>
+                )}
+              </div>
+            )}
+
+            {currentPatient && activeTab === 'patients' && (
               <div className="space-y-4">
                 {/* Patient Info Form */}
                 <div className="bg-white rounded-lg shadow p-6">
@@ -498,72 +584,10 @@ Licensed psychologist review and signature required before distribution.
                   />
                 </div>
 
-                {/* Agent Section */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4">Report Generation Agents</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Click "Generate" to create each report section using AI agents
-                  </p>
-
-                  <button
-                    onClick={() => generateCompleteReport(currentPatient.id)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 flex items-center justify-center gap-2"
-                  >
-                    <Play size={18} /> Generate Complete Report
-                  </button>
-
-                  <div className="space-y-3">
-                    {Object.entries(AGENTS).map(([key, agent]) => (
-                      <div
-                        key={key}
-                        className="border border-gray-300 rounded p-4"
-                      >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-bold text-gray-800">{agent.name}</h4>
-                            <p className="text-sm text-gray-600">{agent.description}</p>
-                          </div>
-                          <button
-                            onClick={() => generateReportSection(currentPatient.id, key)}
-                            disabled={generatingReports[key]}
-                            className="ml-2 bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm flex items-center gap-1"
-                          >
-                            {generatingReports[key] ? (
-                              <>
-                                <Loader size={14} className="animate-spin" /> Generating...
-                              </>
-                            ) : (
-                              <>
-                                <Play size={14} /> Generate
-                              </>
-                            )}
-                          </button>
-                        </div>
-
-                        {patientReports[key] && (
-                          <div className="mt-3 bg-green-50 border border-green-200 rounded p-2">
-                            <p className="text-xs text-green-700 font-semibold mb-2">✓ Generated</p>
-                            <p className="text-xs text-gray-700 line-clamp-3">
-                              {patientReports[key].substring(0, 150)}...
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Export Button */}
-                {Object.keys(patientReports).length > 0 && (
-                  <button
-                    onClick={() => exportReport(currentPatient.id)}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded flex items-center justify-center gap-2"
-                  >
-                    <Download size={20} /> Export Report
-                  </button>
-                )}
               </div>
-            ) : (
+            )}
+
+            {!currentPatient && (
               <div className="bg-white rounded-lg shadow p-6 text-center">
                 <p className="text-gray-600">Select or create a patient to begin</p>
               </div>

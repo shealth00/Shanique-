@@ -5,7 +5,8 @@ require('dotenv').config();
 const express = require('express');
 const cors    = require('cors');
 
-const claimsRouter = require('./routes/claims');
+const claimsRouter      = require('./routes/claims');
+const eligibilityRouter = require('./routes/eligibility');
 
 const app  = express();
 const PORT = process.env.PORT || 3001;
@@ -14,7 +15,8 @@ app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
 // ── Routes ────────────────────────────────────────────────────────────────────
-app.use('/api/edi', claimsRouter);
+app.use('/api/edi',         claimsRouter);
+app.use('/api/eligibility', eligibilityRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', ts: new Date().toISOString() }));
 
