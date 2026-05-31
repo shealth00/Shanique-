@@ -16,8 +16,8 @@ try {
 const gen270 = new EDIGenerator270({
   senderId      : process.env.AVAILITY_SENDER_ID   || 'SUBMITTERID',
   senderQualifier: process.env.AVAILITY_SENDER_QUAL || 'ZZ',
-  usageIndicator: process.env.AVAILITY_USAGE        || 'T',
-  gsApplicationSenderId: process.env.AVAILITY_GS_SENDER_ID || 'SUBMITTERID',
+  usageIndicator: process.env.AVAILITY_USAGE        || 'P',
+  gsApplicationSenderId: process.env.AVAILITY_GS_SENDER_ID || (process.env.AVAILITY_SENDER_ID || 'SUBMITTERID'),
 });
 
 /**

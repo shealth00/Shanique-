@@ -10,8 +10,8 @@ const EDIGenerator837P  = require('../../edi/EDIGenerator837P');
 const generator = new EDIGenerator837P({
   senderId               : process.env.AVAILITY_SENDER_ID      || 'SUBMITTERID',
   senderQualifier        : process.env.AVAILITY_SENDER_QUAL    || 'ZZ',
-  usageIndicator         : process.env.AVAILITY_USAGE          || 'T', // 'T'=test, 'P'=production
-  gsApplicationSenderId  : process.env.AVAILITY_GS_SENDER_ID   || 'SUBMITTERID',
+  usageIndicator         : process.env.AVAILITY_USAGE          || 'P',
+  gsApplicationSenderId  : process.env.AVAILITY_GS_SENDER_ID   || (process.env.AVAILITY_SENDER_ID || 'SUBMITTERID'),
 });
 
 /**

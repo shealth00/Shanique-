@@ -4,8 +4,8 @@
   "description": "EHR system with EDI X12 837P integration for Availity clearinghouse",
   "main": "src/api/server.js",
   "scripts": {
-    "start": "node src/api/server.js",
-    "dev": "nodemon src/api/server.js",
+    "start": "NODE_ENV=production node src/api/server.js",
+    "dev": "NODE_ENV=development nodemon src/api/server.js",
     "test": "jest --testPathPattern=tests/ --verbose",
     "test:edi": "jest tests/edi.test.js --verbose"
   },

@@ -2,6 +2,17 @@
 
 require('dotenv').config();
 
+// ── Production guard ──────────────────────────────────────────────────────────
+// Refuse to start if critical credentials are missing when running in production
+const REQUIRED_ENV = ['AVAILITY_SENDER_ID', 'STEDI_API_KEY'];
+if (process.env.NODE_ENV === 'production') {
+  const missing = REQUIRED_ENV.filter(k => !process.env[k]);
+  if (missing.length) {
+    console.error(`FATAL: Missing required environment variables: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+}
+
 const express = require('express');
 const cors    = require('cors');
 

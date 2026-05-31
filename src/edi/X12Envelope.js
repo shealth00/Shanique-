@@ -43,7 +43,7 @@ class X12Envelope {
   constructor(config = {}) {
     this.senderId        = padRight(config.senderId || 'SUBMITTERID', 15);
     this.senderQualifier = config.senderQualifier || 'ZZ';
-    this.usageIndicator  = config.usageIndicator || 'T';
+    this.usageIndicator  = config.usageIndicator || 'P';
     this.gsSenderId      = config.gsApplicationSenderId || (config.senderId || 'SUBMITTERID').trim();
 
     this._icnCounter = 100000001; // Interchange Control Number seed
