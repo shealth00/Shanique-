@@ -21,7 +21,7 @@ const EMPTY_FORM = {
   serviceTypeCode     : '30',
 };
 
-export default function EligibilityCheck({ prefillPatient }) {
+export default function EligibilityCheck({ prefillPatient, onCheckComplete }) {
   const [form,    setForm]    = useState(prefillPatient ? prefill(prefillPatient) : EMPTY_FORM);
   const [loading, setLoading] = useState(false);
   const [result,  setResult]  = useState(null);
@@ -45,6 +45,7 @@ export default function EligibilityCheck({ prefillPatient }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setResult(data);
+      if (onCheckComplete) onCheckComplete(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -256,13 +257,19 @@ function buildPayload(form) {
 }
 
 function prefill(patient) {
-  const pi = patient.patient_info || patient;
+  const pi   = patient.patient_info || patient;
+  const ins  = patient.insurance?.primaryPayer || {};
+  const prov = patient.provider || {};
   return {
     ...EMPTY_FORM,
-    subscriberFirstName: pi.first_name || '',
-    subscriberLastName : pi.last_name  || '',
-    subscriberDob      : pi.birth_date || '',
-    subscriberGender   : (pi.gender || 'U').charAt(0).toUpperCase(),
+    providerNpi         : prov.npi              || '',
+    providerOrg         : prov.organizationName || '',
+    payerId             : ins.payerId           || '',
+    memberId            : ins.memberId          || '',
+    subscriberFirstName : pi.first_name         || '',
+    subscriberLastName  : pi.last_name          || '',
+    subscriberDob       : pi.birth_date         || '',
+    subscriberGender    : (pi.gender || 'U').charAt(0).toUpperCase(),
   };
 }
 
